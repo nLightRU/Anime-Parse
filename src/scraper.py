@@ -33,22 +33,48 @@ def write_urls_to_csv(csvfile, pages=10):
             id += 1
             file.write(str(id) + ',' + url + '\n')
 
-# write_urls_to_csv(links_filepath, 10)
-
 def parse_title_url(title_url):
     res = requests.get(title_url)
     soup = BeautifulSoup(res.text, 'lxml')
-    
-    left_side = soup.find('div', class_='leftside')
-    stats_tags = left_side.find_all('div', class_='spaceit_pad')
 
-    for stat_tag in stats_tags:
-        stat_info = stat_tag.getText().split(':')
-        stat_name = stat_info[0][1:]
-        stat_value = stat_info[1].strip()
-        print(stat_name, '->', stat_value)
-    
+    keys = ('Type', 
+            'Episodes',
+            'Status',
+            'Studios',
+            'Source',
+            'Genres',
+            'Theme',
+            'Demographic',
+            'Rating'
+        )
+
+    left_side = soup.find('div', class_='leftside')
+    stats = left_side.find_all('div', class_='spaceit_pad')
+
     res_dict = {}
+
+    for stat in stats:
+        # good 
+        stat_name = stat.find('span').getText()[:-1]
+
+        if stat_name in keys:
+            index = keys.index(stat_name)
+            res_dict[keys[index]] = []
+
+            links = stat.find_all('a')
+            if links:
+                for link in links[:-1]:
+                    # print(link.get('title'), end=', ')
+                    res_dict[keys[index]].append(link.getText())
+                # print(links[-1].get('title'))
+                res_dict[keys[index]].append(links[-1].getText())
+            else:
+                #print(stat.getText().split(':')[1].strip())
+                res_dict[keys[index]].append(stat.getText().split(':')[1].strip())
+
+    for key in keys:
+        print(key, ':', res_dict[key])
+
     return res_dict
 
 with open(urls_filepath, encoding='utf-8') as urls_file:
