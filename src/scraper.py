@@ -37,7 +37,9 @@ def parse_title_url(title_url):
     res = requests.get(title_url)
     soup = BeautifulSoup(res.text, 'lxml')
 
-    keys = ('Type', 
+    keys = (
+            'Name',
+            'Type', 
             'Episodes',
             'Status',
             'Studios',
@@ -52,6 +54,10 @@ def parse_title_url(title_url):
     stats = left_side.find_all('div', class_='spaceit_pad')
 
     res_dict = {}
+
+    name =  soup.find('h1', class_='title-name h1_bold_none').getText()
+    
+    res_dict['Name'] = [name]
 
     for stat in stats:
         # good 
@@ -69,7 +75,7 @@ def parse_title_url(title_url):
                 # print(links[-1].get('title'))
                 res_dict[keys[index]].append(links[-1].getText())
             else:
-                #print(stat.getText().split(':')[1].strip())
+                # print(stat.getText().split(':')[1].strip())
                 res_dict[keys[index]].append(stat.getText().split(':')[1].strip())
 
     for key in keys:
