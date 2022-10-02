@@ -58,7 +58,7 @@ def parse_title(url) -> dict:
 
     name =  soup.find('h1', class_='title-name h1_bold_none').getText()
     
-    res_dict['name'] = [name]
+    res_dict['name'] = name
 
     for stat in stats:
         # good 
@@ -67,23 +67,25 @@ def parse_title(url) -> dict:
         stat_name = stat_name.lower()
 
         if stat_name in __keys__:
-            index = __keys__.index(stat_name)
-            res_dict[__keys__[index]] = []
+            res_dict[stat_name] = []
 
             links = stat.find_all('a')
             if links:
                 for link in links[:-1]:
                     # print(link.get('title'), end=', ')
-                    res_dict[__keys__[index]].append(link.getText())
+                    res_dict[stat_name].append(link.getText())
                 # print(links[-1].get('title'))
-                res_dict[__keys__[index]].append(links[-1].getText())
+                res_dict[stat_name].append(links[-1].getText())
             else:
                 # print(stat.getText().split(':')[1].strip())
-                res_dict[__keys__[index]].append(stat.getText().split(':')[1].strip())
-
-        for key in res_dict:
-            if len(res_dict[key]) == 1:
-                res_dict[key] = res_dict[key][0]
+                res_dict[stat_name] = stat.getText().split(':')[1].strip()
+            
+            if len(res_dict[stat_name]) == 1:
+                res_dict[stat_name] = res_dict[stat_name][0]
+    
+    for key in __keys__:
+        if key not in res_dict.keys():
+            res_dict[key] = 'Undefined'
 
     return res_dict
 
@@ -108,10 +110,12 @@ def write_title_to_json(title_dict: dict, json_file) -> None:
 if __name__ == '__main__':
     # urls = make_urls(10)
     # write_urls_to_csv(urls, urls_filepath)
+
     open(titles_filepath,'w').close()
     with open(urls_filepath, 'r', encoding='utf-8') as urls_f:
         dict_reader = csv.DictReader(urls_f)
-        for i in range(10):
+        for i in range(30):
+            print(i+1)
             res = next(dict_reader)
             title = parse_title(res['url'])
             # print(json.dumps(title))
