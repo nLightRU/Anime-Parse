@@ -12,4 +12,3 @@ def create_urls_table(db):
         cursor.execute(req)
         connection.commit()
 
-def export_urls(db, urls_path)
