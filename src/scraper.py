@@ -1,21 +1,23 @@
 import csv
 import requests
+import json
 from bs4 import BeautifulSoup
 
 top_anime_url = 'https://myanimelist.net/topanime.php'
 urls_filepath = r'..\data\urls.csv'
+titles_filepath = r'..\data\titles.json'
 
 __keys__ = (
-            'Name',
-            'Type', 
-            'Episodes',
-            'Status',
-            'Studios',
-            'Source',
-            'Genres',
-            'Theme',
-            'Demographic',
-            'Rating'
+            'name',
+            'type', 
+            'episodes',
+            'status',
+            'studios',
+            'source',
+            'genres',
+            'theme',
+            'demographic',
+            'rating'
         )
 
 def get_urls_from_page(url) -> list:
@@ -56,11 +58,13 @@ def parse_title(url) -> dict:
 
     name =  soup.find('h1', class_='title-name h1_bold_none').getText()
     
-    res_dict['Name'] = [name]
+    res_dict['name'] = [name]
 
     for stat in stats:
         # good 
         stat_name = stat.find('span').getText()[:-1]
+
+        stat_name = stat_name.lower()
 
         if stat_name in __keys__:
             index = __keys__.index(stat_name)
@@ -77,8 +81,16 @@ def parse_title(url) -> dict:
                 # print(stat.getText().split(':')[1].strip())
                 res_dict[__keys__[index]].append(stat.getText().split(':')[1].strip())
 
+        for key in res_dict:
+            if len(res_dict[key]) == 1:
+                res_dict[key] = res_dict[key][0]
+
     return res_dict
-    
+
+def write_title_to_json(title_dict: dict, json_file) -> None:
+    with open(json_file, 'a', encoding='utf-8') as f:
+        title_str = json.dumps(title_dict)
+        f.write(title_str + '\n')    
 
 # how name the shit like what studious / genres / bla bla bla are exists ?
 # we get it from csv with titles
@@ -96,11 +108,12 @@ def parse_title(url) -> dict:
 if __name__ == '__main__':
     # urls = make_urls(10)
     # write_urls_to_csv(urls, urls_filepath)
+    open(titles_filepath,'w').close()
     with open(urls_filepath, 'r', encoding='utf-8') as urls_f:
         dict_reader = csv.DictReader(urls_f)
-        for title in dict_reader:
-            title_url = title['url']
-            res = parse_title(title_url)
-            for key in res:
-                print(key, res[key])
-            break
+        for i in range(10):
+            res = next(dict_reader)
+            title = parse_title(res['url'])
+            # print(json.dumps(title))
+            write_title_to_json(title, titles_filepath)
+            
