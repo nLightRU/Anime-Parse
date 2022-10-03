@@ -102,7 +102,9 @@ __keys__ = (
 
 if __name__ == '__main__':
     # studios = filter_uniques(titles, 'studios')
-    genres = filter_uniques(titles, 'genres')
+    # genres = filter_uniques(titles, 'genres')
+    # for val in genres:
+    #     print(val)
 
     # write_uniques_to_file(studios, r'..\data\studios.txt')
     # write_uniques_to_file(genres, r'..\data\genres.txt')
@@ -113,11 +115,4 @@ if __name__ == '__main__':
     # export_urls_to_db(urls, db)
     # export_titles_to_db(titles, db)
     # export_studios_to_db(studios, db)
-    export_genres_to_db(genres, db)
-
-    # with open(titles, encoding='utf-8') as f:
-    #     for i in range(30):
-    #         line = f.readline()
-    #         data = json.loads(line)
-    #         if type(data['studios']) == list:
-    #             print(data['name'])
+    # export_genres_to_db(genres, db)

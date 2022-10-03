@@ -74,6 +74,10 @@ def parse_title(url) -> dict:
             # year = year.split(' ')
             res_dict['year'] = year
 
+        if stat_name == 'genre':
+            link = stat.find('a')
+            res_dict['genres'] = link.getText()
+
         if stat_name in __keys__:
             res_dict[stat_name] = []
 
@@ -127,10 +131,10 @@ if __name__ == '__main__':
     # urls = make_urls(10)
     # write_urls_to_csv(urls, urls_filepath)
 
-    # open(titles_filepath,'w').close()
+    open(titles_filepath,'w').close()
     with open(urls_filepath, 'r', encoding='utf-8') as urls_f:
         dict_reader = csv.DictReader(urls_f)
-        for i in range(500):
+        for i in range(280):
             print(i+1)
             res = next(dict_reader)
             title = parse_title(res['url'])
