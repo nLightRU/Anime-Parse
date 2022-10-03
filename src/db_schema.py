@@ -2,7 +2,6 @@ import sqlite3
 import json
 
 db = r'..\data\database.db'
-db_beta = r'..\data\database_beta.db'
 
 titles = r'..\data\titles.json'
 
@@ -147,6 +146,6 @@ if __name__ == '__main__':
     # create_titles_genres_table(db)
     # fill_titles_genres(db, titles)
 
-    create_titles_studios_table(db)
-    fill_titles_studios(db, titles)
+    # create_titles_studios_table(db)
+    # fill_titles_studios(db, titles)
     pass

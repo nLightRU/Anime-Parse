@@ -114,23 +114,7 @@ def write_title_to_json(title_dict: dict, json_file) -> None:
         title_str = json.dumps(title_dict)
         f.write(title_str + '\n')    
 
-# how name the shit like what studious / genres / bla bla bla are exists ?
-# we get it from csv with titles
-# def create_stat_values(stat) -> set:
-#     stat_values_set = set()
-#     with open(urls_filepath, encoding='utf-8') as file:
-#         lines = file.readlines()
-#         for line in lines[1:11]:
-#             # print(line.split(',')[1][:-1])
-#             title_info = parse_title_url(line.split(',')[1])
-#             stat_values_set.add(title_info[stat][0])
-    
-#     return stat_values_set
-
 if __name__ == '__main__':
-    # urls = make_urls(10)
-    # write_urls_to_csv(urls, urls_filepath)
-
     open(titles_filepath,'w').close()
     with open(urls_filepath, 'r', encoding='utf-8') as urls_f:
         dict_reader = csv.DictReader(urls_f)
@@ -138,6 +122,5 @@ if __name__ == '__main__':
             print(i+1)
             res = next(dict_reader)
             title = parse_title(res['url'])
-            # print(json.dumps(title))
             write_title_to_json(title, titles_filepath)
             
