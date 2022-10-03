@@ -12,6 +12,7 @@ __keys__ = (
             'type', 
             'episodes',
             'status',
+            'year',
             'studios',
             'source',
             'genres',
@@ -66,6 +67,13 @@ def parse_title(url) -> dict:
 
         stat_name = stat_name.lower()
 
+        if stat_name == 'aired':
+            year = stat.getText().strip()
+            year = year.split(':')[1]
+            year = year.split(' ')[4]
+            # year = year.split(' ')
+            res_dict['year'] = year
+
         if stat_name in __keys__:
             res_dict[stat_name] = []
 
@@ -89,6 +97,14 @@ def parse_title(url) -> dict:
 
     return res_dict
 
+# TO DO: make later
+# def parse_titles(urls, start=1) -> list:
+#     titles = []
+#     with open(urls, encoding='utf-8'):
+#         dict_reader = csv.DictReader(urls)
+#         for i in range(start):
+#             next(dict_reader)
+
 def write_title_to_json(title_dict: dict, json_file) -> None:
     with open(json_file, 'a', encoding='utf-8') as f:
         title_str = json.dumps(title_dict)
@@ -111,10 +127,10 @@ if __name__ == '__main__':
     # urls = make_urls(10)
     # write_urls_to_csv(urls, urls_filepath)
 
-    open(titles_filepath,'w').close()
+    # open(titles_filepath,'w').close()
     with open(urls_filepath, 'r', encoding='utf-8') as urls_f:
         dict_reader = csv.DictReader(urls_f)
-        for i in range(30):
+        for i in range(500):
             print(i+1)
             res = next(dict_reader)
             title = parse_title(res['url'])

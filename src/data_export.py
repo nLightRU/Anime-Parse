@@ -25,11 +25,15 @@ def export_titles_to_db(titles, database):
         for line in f:
             data = json.loads(line)
             
+            if data['episodes'] == 'Unknown':
+                data['episodes'] = '0'
+
             values_tuple = ( 
                 data['name'],
                 data['type'],
                 int(data['episodes']),
                 data['status'],
+                int(data['year']),
                 data['source'],
                 data['theme'],
                 data['demographic'],
@@ -40,11 +44,12 @@ def export_titles_to_db(titles, database):
                                             type, \
                                             episodes, \
                                             status, \
+                                            year, \
                                             source, \
                                             theme, \
                                             demographic, \
                                             rating) \
-                        VALUES (?, ?,?,?,?,?,?,?)', 
+                        VALUES (?,?,?,?,?,?,?,?,?)', 
                         values_tuple)
 
         con.commit()
@@ -69,6 +74,21 @@ def write_uniques_to_file(uniques, fp):
         for val in uniques:
             f.write(val + '\n')
 
+def export_studios_to_db(studios, db):
+    with sqlite3.connect(db) as con:
+        cur = con.cursor()
+        for val in studios:
+            cur.execute('INSERT INTO Studios(name) VALUES(?)',(val,))
+        con.commit()
+
+def export_genres_to_db(genres, db):
+    with sqlite3.connect(db) as con:
+        cur = con.cursor()
+        for val in genres:
+            cur.execute('INSERT INTO Genres(name) VALUES(?)',(val,))
+        con.commit()
+
+
 __keys__ = (
             'name',
             'type', 
@@ -81,16 +101,19 @@ __keys__ = (
         )
 
 if __name__ == '__main__':
-    studios = filter_uniques(titles, 'studios')
+    # studios = filter_uniques(titles, 'studios')
     genres = filter_uniques(titles, 'genres')
-    ratings = filter_uniques(titles, 'rating')
+
+    # write_uniques_to_file(studios, r'..\data\studios.txt')
+    # write_uniques_to_file(genres, r'..\data\genres.txt')
 
     # for val in ratings:
     #     print(val)
 
-    # export_titles_to_db(titles, db)
-
     # export_urls_to_db(urls, db)
+    # export_titles_to_db(titles, db)
+    # export_studios_to_db(studios, db)
+    export_genres_to_db(genres, db)
 
     # with open(titles, encoding='utf-8') as f:
     #     for i in range(30):

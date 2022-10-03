@@ -21,6 +21,7 @@ def create_titles_table(db):
                     "type" TEXT, \
                     "episodes" INTEGER, \
                     "status" TEXT, \
+                    "year" INTGER, \
                     "source" TEXT, \
                     "theme" TEXT, \
                     "demographic" TEXT, \
@@ -28,8 +29,30 @@ def create_titles_table(db):
                     PRIMARY KEY("id" AUTOINCREMENT))'
         cursor.execute(req)
         connection.commit()
-    
+
+def create_studios_table(db):
+    with sqlite3.connect(db) as connection:
+        cursor = connection.cursor()
+        req = 'CREATE TABLE IF NOT EXISTS Studios( \
+                    "id" INTEGER NOT NULL UNIQUE, \
+                    "name" TEXT, \
+                    PRIMARY KEY("id" AUTOINCREMENT))'
+        cursor.execute(req)
+        connection.commit()
+
+def create_genres_table(db):
+    with sqlite3.connect(db) as connection:
+        cursor = connection.cursor()
+        req = 'CREATE TABLE IF NOT EXISTS Genres( \
+                    "id" INTEGER NOT NULL UNIQUE, \
+                    "name" TEXT, \
+                    PRIMARY KEY("id" AUTOINCREMENT))'
+        cursor.execute(req)
+        connection.commit()
+
 if __name__ == '__main__':
-    # create_titles_table(db)
     # create_urls_table(db)
+    # create_titles_table(db)
+    # create_studios_table(db)
+    # create_genres_table(db)
     pass
