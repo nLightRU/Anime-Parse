@@ -1,0 +1,19 @@
+Action
+Sports
+Adventure
+Ecchi
+Fantasy
+Supernatural
+Sci-Fi
+Suspense
+Mystery
+Undefined
+Avant Garde
+Horror
+Boys Love
+Romance
+Award Winning
+Drama
+Slice of Life
+Gourmet
+Comedy

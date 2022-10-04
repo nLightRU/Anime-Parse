@@ -5,6 +5,9 @@ db = r'..\data\database.db'
 
 titles = r'..\data\titles.json'
 
+titles_first = r'..\data\titles_first.json'
+titles_second = r'..\data\titles_second.json'
+
 def create_urls_table(db):
     with sqlite3.connect(db) as con:
         cur = con.cursor()
@@ -137,15 +140,14 @@ def fill_titles_studios(db, titles):
 
             con.commit()
 
+def create_database():
+    create_urls_table(db)
+    create_titles_table(db)
+    create_studios_table(db)
+    create_genres_table(db)
+
+    create_titles_genres_table(db)
+    create_titles_studios_table(db)
+
 if __name__ == '__main__':
-    # create_urls_table(db)
-    # create_titles_table(db)
-    # create_studios_table(db)
-    # create_genres_table(db)
-
-    # create_titles_genres_table(db)
-    # fill_titles_genres(db, titles)
-
-    # create_titles_studios_table(db)
-    # fill_titles_studios(db, titles)
     pass

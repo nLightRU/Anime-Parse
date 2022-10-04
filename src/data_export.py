@@ -1,10 +1,29 @@
 import csv
 import json
 import sqlite3
+from this import s
 
 urls = r'..\data\urls.csv'
 db = r'..\data\database.db'
 titles = r'..\data\titles.json'
+
+genres_f = r'..\data\genres.txt'
+studios_f = r'..\data\studios.txt'
+
+titles_first = r'..\data\titles_first.json'
+titles_second = r'..\data\titles_second.json'
+
+__keys__ = (
+            'name',
+            'type', 
+            'episodes',
+            'status',
+            'year',
+            'source',
+            'theme',
+            'demographic',
+            'rating'
+        )
 
 def export_urls_to_db(urls_filepath, database):
     with sqlite3.connect(database) as connection, open(urls_filepath, encoding='utf-8') as file:
@@ -88,32 +107,23 @@ def export_genres_to_db(genres, db):
             cur.execute('INSERT INTO Genres(name) VALUES(?)',(val,))
         con.commit()
 
+def export_all():
+    export_urls_to_db(urls, db)
 
-__keys__ = (
-            'name',
-            'type', 
-            'episodes',
-            'status',
-            'source',
-            'theme',
-            'demographic',
-            'rating'
-        )
+    export_titles_to_db(titles_first, db)
+    export_titles_to_db(titles_second, db)
+    
+    studios = filter_uniques(titles_first, 'studios')
+    genres = filter_uniques(titles_first, 'genres')
+
+    studios_2 = filter_uniques(titles_second, 'studios')
+    genres_2 = filter_uniques(titles_second, 'genres')
+
+    studios = studios.union(studios_2)
+    genres = genres.union(genres_2)
+   
+    export_studios_to_db(studios, db)
+    export_genres_to_db(genres, db)
 
 if __name__ == '__main__':
-    # studios = filter_uniques(titles, 'studios')
-    # genres = filter_uniques(titles, 'genres')
-    # for val in genres:
-    #     print(val)
-
-    # write_uniques_to_file(studios, r'..\data\studios.txt')
-    # write_uniques_to_file(genres, r'..\data\genres.txt')
-
-    # for val in ratings:
-    #     print(val)
-
-    # export_urls_to_db(urls, db)
-    # export_titles_to_db(titles, db)
-    # export_studios_to_db(studios, db)
-    # export_genres_to_db(genres, db)
     pass

@@ -7,6 +7,9 @@ top_anime_url = 'https://myanimelist.net/topanime.php'
 urls_filepath = r'..\data\urls.csv'
 titles_filepath = r'..\data\titles.json'
 
+titles_first = r'..\data\titles_first.json'
+titles_second = r'..\data\titles_second.json'
+
 __keys__ = (
             'name',
             'type', 
@@ -101,13 +104,14 @@ def parse_title(url) -> dict:
 
     return res_dict
 
-# TO DO: make later
-# def parse_titles(urls, start=1) -> list:
-#     titles = []
-#     with open(urls, encoding='utf-8'):
-#         dict_reader = csv.DictReader(urls)
-#         for i in range(start):
-#             next(dict_reader)
+def parse_titles(urls, start: int=1, end:int=10) -> list:
+    titles = []
+    with open(urls, encoding='utf-8') as f:
+        for line in f.readlines()[start:end + 1]:
+            url = line.split(',')[1]
+            print(line.split(',')[0])
+            titles.append(parse_title(url))
+    return titles
 
 def write_title_to_json(title_dict: dict, json_file) -> None:
     with open(json_file, 'a', encoding='utf-8') as f:
@@ -115,12 +119,4 @@ def write_title_to_json(title_dict: dict, json_file) -> None:
         f.write(title_str + '\n')    
 
 if __name__ == '__main__':
-    open(titles_filepath,'w').close()
-    with open(urls_filepath, 'r', encoding='utf-8') as urls_f:
-        dict_reader = csv.DictReader(urls_f)
-        for i in range(280):
-            print(i+1)
-            res = next(dict_reader)
-            title = parse_title(res['url'])
-            write_title_to_json(title, titles_filepath)
-            
+    pass
